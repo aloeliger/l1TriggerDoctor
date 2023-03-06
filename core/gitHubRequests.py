@@ -3,7 +3,7 @@ import json
 import subprocess
 import requests
 
-class gitHubRequestor:
+class gitHubRequester:
     def __init__(self, theTokenHolder):
         self.theTokenHolder = theTokenHolder
         self.headers = {

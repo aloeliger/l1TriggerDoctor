@@ -3,7 +3,7 @@
 import argparse
 import subprocess
 from core.tokenHolder import tokenHolder
-from core.gitHubRequests import gitHubRequestor
+from core.gitHubRequests import gitHubRequester
 
 def checkPRCompiles(testRepo):
     compilationCommand = 'cmsenv && scram b -j 8'
@@ -22,14 +22,14 @@ def checkPRCompiles(testRepo):
 
     return compilationProcess
 
-def reportToPR(compilationProcess, url, theGitHubRequestor, isDryRun):
+def reportToPR(compilationProcess, url, theGitHubRequester, isDryRun):
     message = 'Hello, I\'m triggerDoctor. @aloeliger is testing this script for L1T offline software validation.\n\n'
     if compilationProcess.returncode == 0:
         message+='Attempts to compile this PR succeeded!\n\n'
     else:
         message+='Attempts to compile this PR failed.\n\n'
         message+='The following is the stderr of the compilation attempt:\n'
-        message+=f'```bash\n{compilationProcess.stderr.decode()}\n```\n'
+        message+=f'```\n{compilationProcess.stderr.decode()}\n```\n'
     message += '|    Info   |     Value    |\n'
     message += '|:---------:|:------------:|\n'
     message +=f'|return code|`{compilationProcess.returncode}`|\n'
@@ -38,21 +38,21 @@ def reportToPR(compilationProcess, url, theGitHubRequestor, isDryRun):
     if isDryRun:
         print(message)
     else:
-        requestJson = theGitHubRequestor.createPullOrIssueComment(
+        requestJson = theGitHubRequester.createPullOrIssueComment(
             url=url,
             comment=message,
         )
 
 def main(args):
     theTokenHolder = tokenHolder()
-    theGitHubRequestor = gitHubRequestor(theTokenHolder)
+    theGitHubRequester = gitHubRequester(theTokenHolder)
     
     compilationProcess = checkPRCompiles(args.location)
 
     reportToPR(
         compilationProcess = compilationProcess,
         url = args.prURL,
-        theGitHubRequestor = theGitHubRequestor,
+        theGitHubRequester = theGitHubRequester,
         isDryRun = args.dryRun
     )
 

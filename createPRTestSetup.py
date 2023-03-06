@@ -2,7 +2,7 @@ import argparse
 import subprocess
 import os
 from core.tokenHolder import tokenHolder
-from core.gitHubRequests import gitHubRequestor
+from core.gitHubRequests import gitHubRequester
 import json
 
 def createCMSSWRelease(release, location, name):
@@ -92,10 +92,10 @@ def performNewReleaseMerge(topPath, baseTag, headTag):
 
 def main(args):
     theTokenHolder = tokenHolder()
-    theGitHubRequestor = gitHubRequestor(theTokenHolder)
+    theGitHubRequester = gitHubRequester(theTokenHolder)
 
     #use trigger doctor to get the json information about the PR
-    prJSON = theGitHubRequestor.getPullRequestInformation(args.prURL)
+    prJSON = theGitHubRequester.getPullRequestInformation(args.prURL)
     newBranch = prJSON["head"]["label"]
     baseBranch = prJSON["base"]["label"]
     prNum = prJSON["number"]
