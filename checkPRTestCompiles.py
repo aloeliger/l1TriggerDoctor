@@ -79,10 +79,9 @@ if __name__ == '__main__':
         '-d',
         '--dryRun',
         action='store_true',
-        help=''
+        help='Attempt to compile, but only print the statement, do not report to the thread'
     )
 
     args = parser.parse_args()
     
     exitCode = main(args)
-    exit(exitCode)
