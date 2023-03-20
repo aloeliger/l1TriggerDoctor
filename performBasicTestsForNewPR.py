@@ -33,6 +33,9 @@ def main(args):
     #Check if the PR compiles
     compilationCommand = f'python3 checkPRTestCompiles.py -l {args.location}/pr_{prNum}/new/ -p {args.prURL}'
     runCommand(compilationCommand, args.dryRun)
+    #Check code checks
+    codeCheckCommand = f'python3 checkPRTestCodeChecks.py -l {args.location}/pr_{prNum}/new/ -p {args.prURL}'
+    runCommand(codeCheckCommand, args.dryRun)
     #Check if the PR is properly formatted
     formatCommand = f'python3 checkPRTestCodeFormat.py -l {args.location}/pr_{prNum}/new/ -p {args.prURL}'
     runCommand(formatCommand, args.dryRun)

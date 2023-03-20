@@ -1,5 +1,6 @@
-#Script to check if a PR has code formatting issues
-#It will report back to the thread the files it has found that do not meet code formatting requirements
+#!/usr/bin/env python3
+#Script to check if a PR has code check issues
+#It will report back to the thread the files it has found that have code check issues
 import argparse
 import subprocess
 from core.tokenHolder import tokenHolder
@@ -7,10 +8,9 @@ from core.gitHubRequests import gitHubRequester
 from subprocess import CalledProcessError
 from common.codeChecks import checkCode
 
-
-def checkCodeFormatting(testRepo):
-    formatCommand = 'cmsenv && scram b -k -j 8 code-format-all'
-    diffProcess = checkCode(testRepo, formatCommand)
+def checkCodeChecks(testRepo):
+    checkCommand = 'cmsenv && scram b -k -j 8 code-checks'
+    diffProcess = checkCode(testRepo, checkCommand)
     return diffProcess
 
 def reportToPR(diffProcess, url, theGitHubRequester, isDryRun):
@@ -18,13 +18,13 @@ def reportToPR(diffProcess, url, theGitHubRequester, isDryRun):
     diffFiles = diffProcess.stdout.decode().split('\n')
     diffFiles.remove('')
     if len(diffFiles) != 0:
-        message += f'I found {len(diffFiles)} files that did not meet formatting requirements:\n'
+        message += f'I found {len(diffFiles)} files that did not pass code checks:\n'
         for fileName in diffFiles:
             message+= f' - {fileName}\n'
-        message += '\nPlease run `scram b code-format` to auto-apply code formatting\n'
+        message += '\nPlease run `scram b code-checks` to auto-apply code formatting\n'
     else:
         #print('I found no files with code format issues!')
-        message += 'I found no files with code format issues!'
+        message += 'I found no files with code check issues!'
     
     if isDryRun:
         print(message)
@@ -34,12 +34,11 @@ def reportToPR(diffProcess, url, theGitHubRequester, isDryRun):
             comment = message
         )
 
-
 def main(args):
     theTokenHolder = tokenHolder()
     theGitHubRequester = gitHubRequester(theTokenHolder)
 
-    diffProcess = checkCodeFormatting(args.location)
+    diffProcess = checkCodeChecks(args.location)
 
     reportToPR(
         diffProcess=diffProcess,
@@ -48,9 +47,8 @@ def main(args):
         isDryRun=args.dryRun
     )
 
-
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description = 'Checks whether any code formatting needs to be applied to a create PR repository and will report to a github thread about it')
+    parser = argparse.ArgumentParser(description = 'Check whether any code checking needs to be applied to a PR')
 
     parser.add_argument(
         '-l',
@@ -64,13 +62,13 @@ if __name__ == '__main__':
         '--prURL',
         required=True,
         nargs='?',
-        help='PR thread to report to'
+        help='PR thread to take info from, and report to'
     )
     parser.add_argument(
         '-d',
         '--dryRun',
         action='store_true',
-        help='Only print the message, do not report to the thread'
+        help = 'Only print the message, do not report to the thread'
     )
 
     args = parser.parse_args()
