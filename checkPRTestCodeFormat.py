@@ -62,7 +62,7 @@ def reportToPR(diffProcess, url, theGitHubRequester, isDryRun):
         message += '\nPlease run `scram b code-format` to auto-apply code formatting\n'
     else:
         #print('I found no files with code format issues!')
-        message += 'I found no files with code format issues!'
+        message += 'I found no files with code format issues!\n'
     
     if isDryRun:
         print(message)

@@ -106,7 +106,7 @@ def reportToPR(checkProcess, diffFiles, headerProcess, url, theGitHubRequester, 
         message += f'```\n{headerProcess.stderr.decode()}\n```\n'
     
     else:
-        message += 'I found no issues with the headers!'
+        message += 'I found no issues with the headers!\n'
 
     message += '|    Info   |     Value    |\n'
     message += '|:---------:|:------------:|\n'
