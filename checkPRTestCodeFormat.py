@@ -49,9 +49,9 @@ def checkCodeFormatting(testRepo):
         cwd=testRepo+'/src/',
     )
 
-    return diffProcess
+    return checkProcess, diffProcess
 
-def reportToPR(diffProcess, url, theGitHubRequester, isDryRun):
+def reportToPR(checkProcess, diffProcess, url, theGitHubRequester, isDryRun):
     message = 'Hello, I\'m triggerDoctor. @aloeliger is testing this script for L1T offline software validation.\n\n'
     diffFiles = diffProcess.stdout.decode().split('\n')
     diffFiles.remove('')
@@ -61,9 +61,13 @@ def reportToPR(diffProcess, url, theGitHubRequester, isDryRun):
             message+= f' - {fileName}\n'
         message += '\nPlease run `scram b code-format` to auto-apply code formatting\n'
     else:
-        #print('I found no files with code format issues!')
         message += 'I found no files with code format issues!\n'
     
+    message += '|    Info   |     Value    |\n'
+    message += '|:---------:|:------------:|\n'
+    message +=f'|return code|`{checkProcess.returncode}`|\n'
+    message +=f'|command|`{checkProcess.args[0]}`|\n\n'
+
     if isDryRun:
         print(message)
     else:
@@ -77,9 +81,10 @@ def main(args):
     theTokenHolder = tokenHolder()
     theGitHubRequester = gitHubRequester(theTokenHolder)
 
-    diffProcess = checkCodeFormatting(args.location)
+    checkProcess, diffProcess = checkCodeFormatting(args.location)
 
     reportToPR(
+        checkProcess=checkProcess,
         diffProcess=diffProcess,
         url=args.prURL,
         theGitHubRequester=theGitHubRequester,
