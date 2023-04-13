@@ -5,8 +5,8 @@ class tokenHolder:
         self.tokenLocation = tokenLocation
         with open(tokenLocation) as theFile:
             self.token = theFile.read()
-        self.token.rstrip()
+        self.token.rstrip('\n')
         assert(self.token != None and self.token != ''), 'empty token'
     
     def getToken(self):
-        return self.token
+        return self.token.rstrip()
