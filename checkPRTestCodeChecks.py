@@ -6,11 +6,12 @@ import subprocess
 from core.tokenHolder import tokenHolder
 from core.gitHubRequests import gitHubRequester
 from subprocess import CalledProcessError
+from core.shellCmsenv import cmsenvCommand
 
 import re
 
 def checkCodeChecks(testRepo):
-    checkCommand = 'cmsenv && scram b -k -j 8 code-checks && scram b -k -j 8 code-checks'
+    checkCommand = f'{cmsenvCommand} && scram b -k -j 8 code-checks && scram b -k -j 8 code-checks'
     try:
         checkProcess = subprocess.run(
             [checkCommand],
@@ -41,7 +42,7 @@ def checkCodeChecks(testRepo):
         print(f'returncode:\n{diffProcess.returncode}')
         raise
 
-    headerCheckCommand = 'cmsenv && scram b -k -j 8 check-headers'
+    headerCheckCommand = f'{cmsenvCommand} && scram b -k -j 8 check-headers'
 
     try:
         headerProcess = subprocess.run(

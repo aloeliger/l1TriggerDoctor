@@ -4,9 +4,10 @@ import argparse
 import subprocess
 from core.tokenHolder import tokenHolder
 from core.gitHubRequests import gitHubRequester
+from core.shellCmsenv import cmsenvCommand
 
 def checkPRCompiles(testRepo):
-    compilationCommand = 'cmsenv && scram b -j 8'
+    compilationCommand = f'{cmsenvCommand} && scram b -j 8'
 
     compilationProcess = subprocess.run(
         [compilationCommand],

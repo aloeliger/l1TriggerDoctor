@@ -2,9 +2,10 @@ import argparse
 import subprocess
 from core.tokenHolder import tokenHolder
 from core.gitHubRequests import gitHubRequester
+from core.shellCmsenv import cmsenvCommand
 
 def checkUnitTests(location):
-    checkCommand = 'cmsenv && scram b runtests'
+    checkCommand = f'{cmsenvCommand} && scram b runtests'
     checkProcess = subprocess.run(
         [checkCommand],
         cwd=f'{args.location}/new/src/',

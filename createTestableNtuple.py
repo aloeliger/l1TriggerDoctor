@@ -6,6 +6,7 @@
 import argparse
 import subprocess
 from checkPRTestCompiles import checkPRCompiles
+from core.shellCmsenv import cmsenvCommand
 
 def createNtuple(location, command):
     #First things first, we should make sure we have compiled any changes here

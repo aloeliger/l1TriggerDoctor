@@ -5,10 +5,10 @@ import subprocess
 from core.tokenHolder import tokenHolder
 from core.gitHubRequests import gitHubRequester
 from subprocess import CalledProcessError
-
+from core.shellCmsenv import cmsenvCommand
 
 def checkCodeFormatting(testRepo):
-    command = 'cmsenv && scram b -k -j 8 code-format-all'
+    command = f'{cmsenvCommand} && scram b -k -j 8 code-format-all'
     try:
         checkProcess = subprocess.run(
             [command],

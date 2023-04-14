@@ -4,6 +4,7 @@ import os
 from core.tokenHolder import tokenHolder
 from core.gitHubRequests import gitHubRequester
 import json
+from core.shellCmsenv import cmsenvCommand
 
 def createCMSSWRelease(release, location, name):
     cmsswCommand = f'scram pro CMSSW {release} -d {location} -n {name}'
@@ -24,7 +25,7 @@ def createCMSSWRelease(release, location, name):
     
     #Now we need to perform the init 
     srcDir = f'{location}/{name}/src/'
-    initCommand = 'cmsenv && git cms-init'
+    initCommand = f'{cmsenvCommand} && git cms-init'
     
     try:
         initProcess = subprocess.run(
@@ -42,7 +43,7 @@ def createCMSSWRelease(release, location, name):
         raise
 
 def performOldReleaseMerge(topPath, baseTag):
-    mergeCommand = f'cmsenv && git cms-merge-topic -u {baseTag}'
+    mergeCommand = f'{cmsenvCommand} && git cms-merge-topic -u {baseTag}'
     location = f'{topPath}/old/src/'
     try:
         mergeProcess = subprocess.run(
@@ -59,7 +60,7 @@ def performOldReleaseMerge(topPath, baseTag):
         raise
 
 def performNewReleaseMerge(topPath, baseTag, headTag):
-    mergeCommand = f'cmsenv && git cms-merge-topic -u {baseTag}'
+    mergeCommand = f'{cmsenvCommand} && git cms-merge-topic -u {baseTag}'
     location = f'{topPath}/new/src/'
     try:
         mergeProcess = subprocess.run(
@@ -75,7 +76,7 @@ def performNewReleaseMerge(topPath, baseTag, headTag):
         print(f'Failed with message: {err}')
         raise
     
-    mergeCommand = f'cmsenv && git cms-merge-topic -u {headTag}'
+    mergeCommand = f'{cmsenvCommand} && git cms-merge-topic -u {headTag}'
     try:
         mergeProcess = subprocess.run(
             [mergeCommand],
