@@ -6,7 +6,7 @@ from core.gitHubRequests import gitHubRequester
 import json
 
 def createCMSSWRelease(release, location, name):
-    cmsswCommand = f'cmsrel {release} -d {location} -n {name}'
+    cmsswCommand = f'scram pro CMSSW {release} -d {location} -n {name}'
     #Create the CMSSW release
     try:
         completedProcess = subprocess.run(
